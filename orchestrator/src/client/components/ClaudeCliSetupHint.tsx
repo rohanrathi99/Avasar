@@ -30,8 +30,8 @@ export const ClaudeCliSetupHint: React.FC = () => {
         </code>
         , or set{" "}
         <code className="rounded bg-muted px-1 py-0.5">ANTHROPIC_API_KEY</code>{" "}
-        instead. JobOps spawns the CLI in headless mode and reuses that
-        authentication — no JobOps API key field.
+        instead. Avasar spawns the CLI in headless mode and reuses that
+        authentication — no Avasar API key field.
       </p>
       <p className="mt-2">
         <a

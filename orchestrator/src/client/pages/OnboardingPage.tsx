@@ -140,7 +140,7 @@ export const OnboardingPage: React.FC = () => {
   }
   if (bootstrapState === "error") {
     return (
-      <LoadingState message="Job Ops could not check the workspace setup. Refresh the page to try again." />
+      <LoadingState message="Avasar could not check the workspace setup. Refresh the page to try again." />
     );
   }
   if (bootstrapState === "account") {
@@ -159,7 +159,7 @@ export const OnboardingPage: React.FC = () => {
 function LoadingState({ message }: { message: string }) {
   return (
     <>
-      <PageHeader icon={Sparkles} title="Set up Job Ops" subtitle={message} />
+      <PageHeader icon={Sparkles} title="Set up Avasar" subtitle={message} />
       <PageMain>
         <Card className="border-border/60 shadow-none">
           <CardContent className="flex min-h-72 items-center justify-center text-sm text-muted-foreground">
@@ -212,7 +212,7 @@ function AccountSetup({ onComplete }: { onComplete: () => void }) {
       <PageHeader
         icon={UserPlus}
         title="Create your workspace account"
-        subtitle="This private account owns your Job Ops workspace."
+        subtitle="This private account owns your Avasar workspace."
       />
       <PageMain>
         <Card className="mx-auto max-w-2xl border-border/60 shadow-none">
@@ -493,7 +493,7 @@ function LaunchSetup({
     <>
       <PageHeader
         icon={Sparkles}
-        title="Set up Job Ops"
+        title="Set up Avasar"
         subtitle="Three focused choices, then you’re in. Search terms wait until your first run."
       />
       <PageMain>
@@ -570,8 +570,8 @@ function LaunchSetup({
               ) : activeStep === "model" ? (
                 <StepShell
                   eyebrow="AI connection"
-                  title="Choose how Job Ops should think"
-                  description="Pick a provider first. Job Ops saves the configuration only after the server verifies the connection."
+                  title="Choose how Avasar should think"
+                  description="Pick a provider first. Avasar saves the configuration only after the server verifies the connection."
                 >
                   <LlmConnectionStep
                     apiKey={flow.watch("llmApiKey")}
@@ -709,7 +709,7 @@ function ProfileStep(props: {
     <StepShell
       eyebrow="Your search"
       title="Where do you want to work?"
-      description="These preferences seed new runs and help Job Ops prioritize location-aware and visa-sponsor sources. You can change them later."
+      description="These preferences seed new runs and help Avasar prioritize location-aware and visa-sponsor sources. You can change them later."
     >
       <div className="grid gap-5 sm:grid-cols-2">
         <Field label="Country or market">
@@ -770,7 +770,7 @@ function ProfileStep(props: {
             I need employer visa sponsorship
           </span>
           <span className="block text-sm text-muted-foreground">
-            Job Ops will show sponsor information and favor sponsor-aware
+            Avasar will show sponsor information and favor sponsor-aware
             sources when available.
           </span>
         </span>
@@ -806,7 +806,7 @@ function ResumeStep({
     return (
       <StepShell
         eyebrow="Your resume"
-        title="Load the resume Job Ops should use"
+        title="Load the resume Avasar should use"
         description="Upload a file or connect Reactive Resume. After parsing, you’ll review the result before anything is marked complete."
       >
         <BaseResumeStep

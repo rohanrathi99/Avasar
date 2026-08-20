@@ -39,7 +39,7 @@ describe("JobTimeline", () => {
     expect(screen.getByText("Discovered")).toBeInTheDocument();
     expect(
       screen.getByText(
-        "Job Ops discovered this job and added it to your pipeline.",
+        "Avasar discovered this job and added it to your pipeline.",
       ),
     ).toBeInTheDocument();
     expect(screen.queryByText("No stage events yet.")).not.toBeInTheDocument();

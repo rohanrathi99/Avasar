@@ -114,7 +114,7 @@ export const App: React.FC = () => {
               {!demoWaitlistBannerDismissed && (
                 <>
                   {" "}
-                  This is a read-only demo. Want JobOps without the Docker
+                  This is a read-only demo. Want Avasar without the Docker
                   setup?{" "}
                   <a
                     className="font-semibold underline underline-offset-2 hover:text-amber-50"

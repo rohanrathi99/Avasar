@@ -880,7 +880,7 @@ describe("SettingsPage", () => {
     ).toBeInTheDocument();
     expect(toast.success).toHaveBeenCalledWith("Settings saved");
     expect(toast.info).toHaveBeenCalledWith(
-      "Settings saved, but JobOps could not verify Reactive Resume because the instance is unavailable.",
+      "Settings saved, but Avasar could not verify Reactive Resume because the instance is unavailable.",
     );
   });
 

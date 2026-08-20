@@ -58,7 +58,7 @@ export function AutomaticSearchPrompt({
           What kind of jobs are you looking for?
         </h1>
         <p className="mx-auto max-w-xl text-sm leading-6 text-muted-foreground sm:text-base">
-          Describe the roles you want. Job Ops will turn that into search terms,
+          Describe the roles you want. Avasar will turn that into search terms,
           sources, filters, and ranking rules before anything runs.
         </p>
       </div>

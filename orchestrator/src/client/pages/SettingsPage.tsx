@@ -1302,7 +1302,7 @@ export const SettingsPage: React.FC = () => {
           clearErrors(getRxResumeValidationFields());
           if (isRxResumeAvailabilityValidationFailure(validation)) {
             rxResumeSaveWarningMessage =
-              "Settings saved, but JobOps could not verify Reactive Resume because the instance is unavailable.";
+              "Settings saved, but Avasar could not verify Reactive Resume because the instance is unavailable.";
           }
         }
       }

@@ -202,7 +202,7 @@ export function FatalErrorScreen({
               Something went wrong
             </h1>
             <p className="max-w-prose text-sm leading-6 text-muted-foreground">
-              JobOps hit an unexpected client error. Your data should still be
+              Avasar hit an unexpected client error. Your data should still be
               safe; reload the app or open a GitHub issue with the diagnostics
               below.
             </p>
