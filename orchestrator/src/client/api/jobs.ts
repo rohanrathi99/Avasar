@@ -338,6 +338,18 @@ export async function markAsApplied(id: string): Promise<Job> {
   });
 }
 
+export async function addJobToWishlist(id: string): Promise<Job> {
+  return fetchApi<Job>(`/jobs/${id}/wishlist`, {
+    method: "POST",
+  });
+}
+
+export async function removeJobFromWishlist(id: string): Promise<Job> {
+  return fetchApi<Job>(`/jobs/${id}/wishlist`, {
+    method: "DELETE",
+  });
+}
+
 export async function skipJob(ids: string[]): Promise<JobActionResponse>;
 export async function skipJob(id: string): Promise<Job>;
 export async function skipJob(

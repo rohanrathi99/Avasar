@@ -45,6 +45,7 @@ export const createJob = (overrides: Partial<Job> = {}): Job => ({
   pdfFingerprint: null,
   pdfGeneratedAt: null,
   tracerLinksEnabled: false,
+  wishlistedAt: null,
   sponsorMatchScore: null,
   sponsorMatchNames: null,
   appliedDuplicateMatch: null,
