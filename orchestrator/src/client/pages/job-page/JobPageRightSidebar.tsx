@@ -7,6 +7,8 @@ import {
   Edit2,
   ExternalLink,
   FileText,
+  Heart,
+  HeartOff,
   MoreHorizontal,
   PlusCircle,
   RefreshCcw,
@@ -44,6 +46,7 @@ type JobPageRightSidebarProps = {
   pdfDownloadLabel: string;
   onStartTailoring: () => void;
   onMarkApplied: () => void;
+  onToggleWishlist: () => void;
   onMoveToInProgress: () => void;
   onOpenLogEvent: () => void;
   onEditTailoring: () => void;
@@ -76,6 +79,7 @@ export const JobPageRightSidebar: React.FC<JobPageRightSidebarProps> = ({
   pdfDownloadLabel,
   onStartTailoring,
   onMarkApplied,
+  onToggleWishlist,
   onMoveToInProgress,
   onOpenLogEvent,
   onEditTailoring,
@@ -133,6 +137,23 @@ export const JobPageRightSidebar: React.FC<JobPageRightSidebarProps> = ({
           >
             <CheckCircle2 className="mr-1.5 h-3.5 w-3.5" />
             Mark Applied
+          </Button>
+        )}
+
+        {(isReady || isDiscovered) && (
+          <Button
+            size="sm"
+            className="w-full justify-start"
+            variant="outline"
+            onClick={onToggleWishlist}
+            disabled={isBusy}
+          >
+            {job.wishlistedAt ? (
+              <HeartOff className="mr-1.5 h-3.5 w-3.5" />
+            ) : (
+              <Heart className="mr-1.5 h-3.5 w-3.5" />
+            )}
+            {job.wishlistedAt ? "Remove from Wishlist" : "Add to Wishlist"}
           </Button>
         )}
 

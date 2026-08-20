@@ -379,6 +379,19 @@ export const JobPage: React.FC = () => {
     });
   };
 
+  const handleToggleWishlist = async () => {
+    await runAction("toggle-wishlist", async () => {
+      if (!job) return;
+      if (job.wishlistedAt) {
+        await api.removeJobFromWishlist(job.id);
+        toast.success("Removed from wishlist");
+      } else {
+        await api.addJobToWishlist(job.id);
+        toast.success("Added to wishlist");
+      }
+    });
+  };
+
   const handleMoveToInProgress = async () => {
     await runAction("move-in-progress", async () => {
       if (!job) return;
@@ -895,6 +908,7 @@ export const JobPage: React.FC = () => {
               pdfDownloadLabel={pdfLabels.download}
               onStartTailoring={() => navigate(`/jobs/discovered/${job.id}`)}
               onMarkApplied={() => void handleMarkApplied()}
+              onToggleWishlist={() => void handleToggleWishlist()}
               onMoveToInProgress={() => void handleMoveToInProgress()}
               onOpenLogEvent={() => setIsLogModalOpen(true)}
               onEditTailoring={() => navigate(`/jobs/ready/${job.id}`)}
