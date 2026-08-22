@@ -3,6 +3,7 @@ export * from "./app";
 export * from "./chat";
 export * from "./design-resume";
 export * from "./design-resume-jake";
+export * from "./export";
 export * from "./extractors";
 export * from "./jobs";
 export * from "./pipeline";

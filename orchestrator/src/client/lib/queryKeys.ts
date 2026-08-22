@@ -138,4 +138,8 @@ export const queryKeys = {
     all: ["backups"] as const,
     list: () => [...queryKeys.backups.all, "list"] as const,
   },
+  exportData: {
+    all: ["export"] as const,
+    datasets: () => [...queryKeys.exportData.all, "datasets"] as const,
+  },
 } as const;

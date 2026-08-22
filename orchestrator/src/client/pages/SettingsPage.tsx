@@ -23,6 +23,7 @@ import { ChatSettingsSection } from "@client/pages/settings/components/ChatSetti
 import { DangerZoneSection } from "@client/pages/settings/components/DangerZoneSection";
 import { DisplaySettingsSection } from "@client/pages/settings/components/DisplaySettingsSection";
 import { EnvironmentSettingsSection } from "@client/pages/settings/components/EnvironmentSettingsSection";
+import { ExportSettingsSection } from "@client/pages/settings/components/ExportSettingsSection";
 import { ModelSettingsSection } from "@client/pages/settings/components/ModelSettingsSection";
 import { PromptTemplatesSection } from "@client/pages/settings/components/PromptTemplatesSection";
 import { ReactiveResumeSection } from "@client/pages/settings/components/ReactiveResumeSection";
@@ -137,6 +138,7 @@ type SettingsSectionId =
   | "environment"
   | "display"
   | "backup"
+  | "export"
   | "danger-zone";
 
 type SettingsGroupId =
@@ -146,6 +148,7 @@ type SettingsGroupId =
   | "workspaces"
   | "display"
   | "backups"
+  | "export"
   | "danger";
 
 type SettingsSectionDescriptor = {
@@ -272,6 +275,18 @@ const SETTINGS_NAV_GROUPS: SettingsNavGroup[] = [
     ],
   },
   {
+    id: "export",
+    label: "Export",
+    items: [
+      {
+        id: "export",
+        label: "Export",
+        description: "Download your jobs, notes, and other data.",
+        searchTerms: ["export", "download", "xlsx", "excel", "json", "backup"],
+      },
+    ],
+  },
+  {
     id: "danger",
     label: "Danger Zone",
     items: [
@@ -341,6 +356,7 @@ const SECTION_FIELD_MAP: Record<
     "autoTailorOnManualImport",
   ],
   backup: ["backupEnabled", "backupHour", "backupMaxCount"],
+  export: [],
   "danger-zone": [],
 };
 
@@ -1551,6 +1567,8 @@ export const SettingsPage: React.FC = () => {
         return backup.backupEnabled.effective
           ? { label: "Scheduled", variant: "outline" as const }
           : { label: "Manual only", variant: "secondary" as const };
+      case "export":
+        return { label: "Available", variant: "secondary" as const };
       default:
         return { label: "Ready", variant: "outline" as const };
     }
@@ -1681,6 +1699,15 @@ export const SettingsPage: React.FC = () => {
           onDeleteBackup={handleDeleteBackup}
           isCreatingBackup={isCreatingBackup}
           isDeletingBackup={isDeletingBackup}
+          layoutMode="panel"
+        />
+      );
+      break;
+    case "export":
+      activeSectionContent = (
+        <ExportSettingsSection
+          isLoading={isLoading}
+          isSaving={isSaving}
           layoutMode="panel"
         />
       );
