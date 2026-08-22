@@ -160,6 +160,7 @@ export async function getJobListItems(
     jobDescription: jobs.jobDescription,
     jobBrief: jobs.jobBrief,
     tracerLinksEnabled: jobs.tracerLinksEnabled,
+    wishlistedAt: jobs.wishlistedAt,
     jobType: jobs.jobType,
     jobFunction: jobs.jobFunction,
     salaryMinAmount: jobs.salaryMinAmount,
@@ -656,6 +657,13 @@ export async function updateJob(
       : input.status === "applied"
         ? { appliedAt: sql`coalesce(${jobs.appliedAt}, ${now})` }
         : {};
+  // Applying removes the job from the wishlist automatically.
+  const wishlistedAtUpdate =
+    input.wishlistedAt !== undefined
+      ? { wishlistedAt: input.wishlistedAt }
+      : input.status === "applied"
+        ? { wishlistedAt: null }
+        : {};
 
   await db
     .update(jobs)
@@ -669,6 +677,7 @@ export async function updateJob(
       ...(input.status === "processing" ? { processedAt: now } : {}),
       ...readyAtUpdate,
       ...appliedAtUpdate,
+      ...wishlistedAtUpdate,
     })
     .where(and(jobsScopeFilter(), eq(jobs.id, id)));
 
@@ -882,6 +891,7 @@ function mapRowToJob(row: typeof jobs.$inferSelect): Job {
     pdfFingerprint: row.pdfFingerprint ?? null,
     pdfGeneratedAt: row.pdfGeneratedAt ?? null,
     tracerLinksEnabled: row.tracerLinksEnabled ?? false,
+    wishlistedAt: row.wishlistedAt ?? null,
     sponsorMatchScore: row.sponsorMatchScore ?? null,
     sponsorMatchNames: row.sponsorMatchNames ?? null,
     jobType: row.jobType ?? null,

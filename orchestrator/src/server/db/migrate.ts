@@ -780,6 +780,7 @@ const migrations = [
   `ALTER TABLE jobs ADD COLUMN pdf_regenerating INTEGER NOT NULL DEFAULT 0`,
   `ALTER TABLE jobs ADD COLUMN pdf_fingerprint TEXT`,
   `ALTER TABLE jobs ADD COLUMN pdf_generated_at TEXT`,
+  `ALTER TABLE jobs ADD COLUMN wishlisted_at TEXT`,
 
   // Add sponsor match columns for visa sponsor matching feature
   `ALTER TABLE jobs ADD COLUMN sponsor_match_score REAL`,
@@ -913,6 +914,7 @@ const migrations = [
     pdf_fingerprint TEXT,
     pdf_generated_at TEXT,
     tracer_links_enabled INTEGER NOT NULL DEFAULT 0,
+    wishlisted_at TEXT,
     sponsor_match_score REAL,
     sponsor_match_names TEXT,
     discovered_at TEXT NOT NULL DEFAULT (datetime('now')),
@@ -931,7 +933,7 @@ const migrations = [
     vacancy_count, work_from_home_type, title, employer, employer_url, job_url, application_link, disciplines,
     deadline, salary, location, location_evidence, degree_required, starting, job_description, status, outcome, closed_at,
     suitability_score, suitability_reason, job_brief, tailored_summary, tailored_headline, tailored_skills,
-    selected_project_ids, pdf_path, pdf_source, pdf_regenerating, pdf_fingerprint, pdf_generated_at, tracer_links_enabled, sponsor_match_score, sponsor_match_names, discovered_at, processed_at,
+    selected_project_ids, pdf_path, pdf_source, pdf_regenerating, pdf_fingerprint, pdf_generated_at, tracer_links_enabled, wishlisted_at, sponsor_match_score, sponsor_match_names, discovered_at, processed_at,
     ready_at,
     applied_at, created_at, updated_at
   )
@@ -943,7 +945,7 @@ const migrations = [
     vacancy_count, work_from_home_type, title, employer, employer_url, job_url, application_link, disciplines,
     deadline, salary, location, location_evidence, degree_required, starting, job_description, status, outcome, closed_at,
     suitability_score, suitability_reason, ${jobsHasJobBrief ? "job_brief" : "NULL"}, tailored_summary, tailored_headline, tailored_skills,
-    selected_project_ids, pdf_path, pdf_source, ${jobsHasPdfRegenerating ? "pdf_regenerating" : "0"}, pdf_fingerprint, pdf_generated_at, tracer_links_enabled, sponsor_match_score, sponsor_match_names, discovered_at, processed_at,
+    selected_project_ids, pdf_path, pdf_source, ${jobsHasPdfRegenerating ? "pdf_regenerating" : "0"}, pdf_fingerprint, pdf_generated_at, tracer_links_enabled, wishlisted_at, sponsor_match_score, sponsor_match_names, discovered_at, processed_at,
     ready_at,
     applied_at, created_at, updated_at
   FROM jobs`,

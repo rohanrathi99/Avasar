@@ -56,6 +56,7 @@ function renderRightSidebar(overrides: Parameters<typeof createJob>[0] = {}) {
       pdfDownloadLabel="Download old PDF"
       onStartTailoring={noop}
       onMarkApplied={noop}
+      onToggleWishlist={noop}
       onMoveToInProgress={noop}
       onOpenLogEvent={noop}
       onEditTailoring={noop}
@@ -98,6 +99,25 @@ describe("JobPageRightSidebar actions", () => {
     expect(
       screen.getByRole("button", { name: /download old pdf/i }),
     ).toBeInTheDocument();
+  });
+
+  it("shows a wishlist button whose label follows the job's wishlist state", () => {
+    renderRightSidebar();
+    expect(
+      screen.getByRole("button", { name: /add to wishlist/i }),
+    ).toBeInTheDocument();
+  });
+
+  it("offers removal for wishlisted jobs", () => {
+    renderRightSidebar({ wishlistedAt: "2026-08-20T00:00:00Z" });
+    expect(
+      screen.getByRole("button", { name: /remove from wishlist/i }),
+    ).toBeInTheDocument();
+  });
+
+  it("hides the wishlist button once a job is applied", () => {
+    renderRightSidebar({ status: "applied" });
+    expect(screen.queryByRole("button", { name: /wishlist/i })).toBeNull();
   });
 
   it("uses upload wording when the job has no resume PDF", () => {
