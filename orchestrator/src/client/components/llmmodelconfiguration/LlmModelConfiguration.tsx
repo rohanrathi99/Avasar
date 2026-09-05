@@ -497,7 +497,7 @@ export function LlmModelConfiguration({
 
           <div className="space-y-3 text-sm">
             <div className="text-xs text-muted-foreground">Resolved config</div>
-            <div className="grid gap-x-4 gap-y-2 text-xs sm:grid-cols-[160px_1fr]">
+            <div className="grid grid-cols-1 gap-x-4 gap-y-2 text-xs sm:grid-cols-[160px_1fr]">
               <div className="text-muted-foreground">Provider</div>
               <div className="font-mono">{selectedProvider || "-"}</div>
 

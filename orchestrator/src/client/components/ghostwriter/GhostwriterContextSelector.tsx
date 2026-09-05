@@ -369,7 +369,10 @@ export const GhostwriterContextSelector: React.FC<
           <ChevronDown className="h-3 w-3 text-muted-foreground" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent align="end" className="w-[28rem] p-0">
+      <PopoverContent
+        align="end"
+        className="w-[28rem] max-w-[calc(100vw-2rem)] p-0"
+      >
         <div className="border-b px-3 py-2.5">
           <div className="flex items-center justify-between gap-3">
             <div className="text-sm font-medium">Ghostwriter context</div>

@@ -574,7 +574,7 @@ export const TailoringWorkspace: React.FC<TailoringWorkspaceProps> = (
 
   return (
     <div className="space-y-5">
-      <div className="grid gap-3 xl:grid-cols-[minmax(0,1.25fr)_minmax(260px,0.75fr)]">
+      <div className="grid grid-cols-1 gap-3 xl:grid-cols-[minmax(0,1.25fr)_minmax(260px,0.75fr)]">
         <div
           className={`flex min-h-16 items-center justify-between gap-3 rounded-md border px-3 py-3 ${
             isDraftReady

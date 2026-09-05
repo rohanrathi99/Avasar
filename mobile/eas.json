@@ -30,7 +30,7 @@
       "channel": "production",
       "autoIncrement": true,
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://api.example.com"
+        "EXPO_PUBLIC_API_URL": "https://avasar.slotify.dev"
       },
       "android": {
         "buildType": "app-bundle"

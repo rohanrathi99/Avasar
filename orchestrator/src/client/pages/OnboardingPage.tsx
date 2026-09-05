@@ -497,7 +497,7 @@ function LaunchSetup({
         subtitle="Three focused choices, then you’re in. Search terms wait until your first run."
       />
       <PageMain>
-        <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[15rem_minmax(0,1fr)]">
+        <div className="mx-auto grid max-w-6xl grid-cols-1 gap-8 lg:grid-cols-[15rem_minmax(0,1fr)]">
           <nav className="space-y-2" aria-label="Setup progress">
             {visibleSteps.map((step, index) => {
               const requirement = getRequirement(status, step);
@@ -858,7 +858,7 @@ function ResumeStep({
       title="Is this the right resume?"
       description="Confirm the parsed identity and recent experience. Completion is tied to this exact resume source, so replacing it requires confirmation again."
     >
-      <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_15rem]">
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1fr)_15rem]">
         <div className="min-h-80 rounded-xl border border-border/60 bg-muted/15 p-6">
           <div className="mb-6 border-b pb-5">
             <h3 className="text-2xl font-semibold">
@@ -878,7 +878,10 @@ function ResumeStep({
           </div>
           <div className="space-y-4">
             {experience.slice(0, 4).map((item) => (
-              <div key={item.id} className="grid gap-1 sm:grid-cols-[1fr_auto]">
+              <div
+                key={item.id}
+                className="grid grid-cols-1 gap-1 sm:grid-cols-[1fr_auto]"
+              >
                 <div>
                   <div className="font-medium">{item.position}</div>
                   <div className="text-sm text-muted-foreground">

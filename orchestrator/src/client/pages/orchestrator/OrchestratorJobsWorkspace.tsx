@@ -174,7 +174,7 @@ export const OrchestratorJobsWorkspace: React.FC<
         filteredCount={filteredCount}
       />
 
-      <div className="grid gap-4 lg:grid-cols-[minmax(0,400px)_minmax(0,1fr)]">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,400px)_minmax(0,1fr)]">
         <JobListPanel
           ref={jobListHandleRef}
           isLoading={isLoading}

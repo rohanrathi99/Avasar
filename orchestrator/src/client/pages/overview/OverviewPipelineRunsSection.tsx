@@ -135,7 +135,7 @@ function RunsList(props: {
               key={run.id}
               onClick={() => props.onSelectRun(run.id)}
               selected={isSelected}
-              className={`grid gap-3 rounded-lg border px-3 py-3 md:grid-cols-[minmax(0,1.6fr)_auto_auto_auto] ${
+              className={`grid grid-cols-1 gap-3 rounded-lg border px-3 py-3 md:grid-cols-[minmax(0,1.6fr)_auto_auto_auto] ${
                 isSelected
                   ? "border-primary/40 bg-primary/5"
                   : "border-border/60 hover:bg-muted/30"
@@ -553,7 +553,7 @@ export const OverviewPipelineRunsSection: React.FC = () => {
 
           {latestRun ? (
             <>
-              <div className="grid gap-3 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,2fr)]">
+              <div className="grid grid-cols-1 gap-3 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,2fr)]">
                 <div className="rounded-lg border border-border/60 bg-muted/20 p-4">
                   <div className="flex items-center gap-2 text-sm font-medium">
                     <Activity className="h-4 w-4 text-muted-foreground" />

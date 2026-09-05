@@ -216,7 +216,7 @@ export const JobNotesCard: React.FC<JobNotesCardProps> = ({ jobId }) => {
           </div>
         </CardHeader>
         <CardContent>
-          <div className="grid gap-6 lg:grid-cols-[minmax(14rem,0.7fr)_minmax(0,1.3fr)]">
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(14rem,0.7fr)_minmax(0,1.3fr)]">
             <aside data-testid="job-notes-list" className="space-y-3">
               {!editorState && notesQuery.isLoading && notes.length === 0 && (
                 <div className="rounded-xl border border-dashed border-border/60 bg-muted/10 p-4 text-sm text-muted-foreground">

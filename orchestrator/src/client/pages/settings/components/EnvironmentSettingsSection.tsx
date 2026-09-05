@@ -108,7 +108,7 @@ function AccountManagementSection() {
         </p>
       </div>
 
-      <div className="grid gap-3 md:grid-cols-[1fr_1fr_1fr_auto]">
+      <div className="grid grid-cols-1 gap-3 md:grid-cols-[1fr_1fr_1fr_auto]">
         <Input
           value={displayName}
           onChange={(event) => setDisplayName(event.currentTarget.value)}
@@ -151,7 +151,7 @@ function AccountManagementSection() {
           const resetPassword = resetPasswordByUserId[user.id] ?? "";
           return (
             <div
-              className="grid gap-3 p-3 md:grid-cols-[minmax(0,1fr)_auto_auto] md:items-center"
+              className="grid grid-cols-1 gap-3 p-3 md:grid-cols-[minmax(0,1fr)_auto_auto] md:items-center"
               key={user.id}
             >
               <div className="min-w-0">

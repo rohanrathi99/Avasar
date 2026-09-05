@@ -298,7 +298,7 @@ export const TracerLinksPage: React.FC = () => {
                 <div className="text-sm font-semibold">Filters</div>
               </AccordionTrigger>
               <AccordionContent className="px-4 pb-4">
-                <div className="grid gap-3 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto]">
+                <div className="grid grid-cols-1 gap-3 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto]">
                   <div className="space-y-1">
                     <Label htmlFor="tracer-from-date">From date</Label>
                     <Input

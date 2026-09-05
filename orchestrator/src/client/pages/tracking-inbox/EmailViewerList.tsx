@@ -126,7 +126,7 @@ const EmailViewerRow: React.FC<EmailViewerRowProps> = ({
           }
           disabled={isActionLoading}
           triggerClassName="min-w-0 flex-1"
-          contentClassName="w-[360px]"
+          contentClassName="w-[360px] max-w-[calc(100vw-2rem)]"
           ariaLabel="Select job"
         />
 

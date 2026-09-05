@@ -277,7 +277,7 @@ export const SplitLayout: React.FC<SplitLayoutProps> = ({
 }) => (
   <section
     className={cn(
-      "grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,420px)]",
+      "grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,420px)]",
       className,
     )}
   >

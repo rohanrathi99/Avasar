@@ -427,7 +427,7 @@ export function WatchlistSourcesCard({
                             onSourceSearchNoResults({ searchText })
                           }
                           triggerClassName="h-9 w-full justify-between rounded-xl border-border/70 bg-background/70"
-                          contentClassName="w-[var(--radix-popover-trigger-width)] min-w-[320px]"
+                          contentClassName="w-[var(--radix-popover-trigger-width)] min-w-[min(320px,calc(100vw-2rem))]"
                         />
                         {draft.isCustom ? (
                           <Input

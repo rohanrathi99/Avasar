@@ -852,7 +852,7 @@ export const AutomaticRunTab: React.FC<AutomaticRunTabProps> = ({
               </Alert>
             ) : null}
 
-            <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_20rem]">
+            <div className="grid grid-cols-1 items-start gap-5 lg:grid-cols-[minmax(0,1fr)_20rem]">
               <div className="flex min-w-0 flex-col gap-4">
                 <AutomaticSearchTermsCard
                   selectedPreset={selectedPreset}

@@ -120,7 +120,7 @@ const EmailRow: React.FC<{ item: PostApplicationJobEmailItem }> = ({
   const date = formatEpochMs(item.message.receivedAt);
 
   return (
-    <article className="grid gap-3 border-b border-border/50 px-4 py-4 last:border-b-0 lg:grid-cols-[minmax(0,1fr)_auto]">
+    <article className="grid grid-cols-1 gap-3 border-b border-border/50 px-4 py-4 last:border-b-0 lg:grid-cols-[minmax(0,1fr)_auto]">
       <div className="min-w-0">
         <div className="flex min-w-0 items-start gap-3">
           <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-border/60 bg-muted/35 text-muted-foreground">
