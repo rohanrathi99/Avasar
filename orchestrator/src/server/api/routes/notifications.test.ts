@@ -21,7 +21,10 @@ async function login(baseUrl: string): Promise<string> {
 }
 
 function authHeaders(token: string) {
-  return { Authorization: `Bearer ${token}`, "Content-Type": "application/json" };
+  return {
+    Authorization: `Bearer ${token}`,
+    "Content-Type": "application/json",
+  };
 }
 
 describe.sequential("Notifications routes", () => {
@@ -31,7 +34,9 @@ describe.sequential("Notifications routes", () => {
   let tempDir: string;
 
   beforeEach(async () => {
-    ({ server, baseUrl, closeDb, tempDir } = await startServer({ env: AUTH_ENV }));
+    ({ server, baseUrl, closeDb, tempDir } = await startServer({
+      env: AUTH_ENV,
+    }));
   });
 
   afterEach(async () => {
@@ -60,7 +65,10 @@ describe.sequential("Notifications routes", () => {
 
     const reg1 = await register();
     expect(reg1.status).toBe(200);
-    expect(await reg1.json()).toMatchObject({ ok: true, data: { registered: true } });
+    expect(await reg1.json()).toMatchObject({
+      ok: true,
+      data: { registered: true },
+    });
 
     // Re-registering the same token must not error (upsert).
     const reg2 = await register();

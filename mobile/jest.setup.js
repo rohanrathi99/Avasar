@@ -32,3 +32,6 @@ jest.mock("expo-sharing", () => ({
   isAvailableAsync: jest.fn(async () => true),
   shareAsync: jest.fn(async () => {}),
 }));
+
+// expo/fetch pulls in a native module (ExpoFetchModule) unavailable under Jest.
+jest.mock("expo/fetch", () => ({ fetch: jest.fn() }));

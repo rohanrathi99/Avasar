@@ -1,7 +1,8 @@
 import { logger } from "@infra/logger";
-import * as jobsRepo from "@server/repositories/jobs";
+import { db, schema } from "@server/db/index";
 import * as pushTokensRepo from "@server/repositories/push-tokens";
 import type { PostApplicationMessageType } from "@shared/types";
+import { eq } from "drizzle-orm";
 
 const EXPO_PUSH_ENDPOINT = "https://exp.host/--/api/v2/push/send";
 const EXPO_CHUNK_SIZE = 100;
@@ -113,7 +114,17 @@ export async function notifyApplicationUpdate(args: {
   messageType: PostApplicationMessageType;
 }): Promise<void> {
   try {
-    const job = await jobsRepo.getJobById(args.jobId);
+    // The API-facing Job type omits userId (internal scoping), so read the
+    // owner + display fields straight from the jobs table.
+    const { jobs } = schema;
+    const [job] = await db
+      .select({
+        userId: jobs.userId,
+        title: jobs.title,
+        employer: jobs.employer,
+      })
+      .from(jobs)
+      .where(eq(jobs.id, args.jobId));
     if (!job?.userId) return; // Nothing to target.
 
     const tokens = await pushTokensRepo.listActiveTokensForUser(job.userId);

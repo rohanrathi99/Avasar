@@ -66,6 +66,9 @@ export async function deletePushToken(
 export async function disablePushToken(token: string): Promise<void> {
   await db
     .update(pushTokens)
-    .set({ disabledAt: Math.floor(Date.now() / 1000), updatedAt: new Date().toISOString() })
+    .set({
+      disabledAt: Math.floor(Date.now() / 1000),
+      updatedAt: new Date().toISOString(),
+    })
     .where(eq(pushTokens.token, token));
 }
