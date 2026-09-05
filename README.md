@@ -148,6 +148,7 @@ Self-hosted will always be free and open source.
 - [Feature Overview](https://jobops.dakheera47.com/docs/features/overview)
 - [Orchestrator Pipeline](https://jobops.dakheera47.com/docs/features/orchestrator)
 - [Extractor System](https://jobops.dakheera47.com/docs/extractors/overview)
+- [Mobile app (React Native + Expo)](./mobile/README.md)
 - [Troubleshooting](https://jobops.dakheera47.com/docs/troubleshooting/common-problems)
 
 ---

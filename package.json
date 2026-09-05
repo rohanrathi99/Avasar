@@ -6,7 +6,8 @@
     "docs-site",
     "career-boards/*",
     "extractors/*",
-    "shared"
+    "shared",
+    "mobile"
   ],
   "scripts": {
     "test:all": "npm --workspace orchestrator run test:run",
