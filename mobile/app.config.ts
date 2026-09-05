@@ -28,7 +28,9 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   userInterfaceStyle: "automatic",
   newArchEnabled: true,
   assetBundlePatterns: ["**/*"],
+  icon: "./assets/icon.png",
   splash: {
+    image: "./assets/splash-icon.png",
     resizeMode: "contain",
     backgroundColor: "#0B0B0F",
   },
@@ -49,6 +51,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     package: BUNDLE_ID,
     versionCode: 1,
     adaptiveIcon: {
+      foregroundImage: "./assets/adaptive-icon.png",
       backgroundColor: "#0B0B0F",
     },
     permissions: ["CAMERA", "READ_EXTERNAL_STORAGE", "POST_NOTIFICATIONS"],
@@ -64,6 +67,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   web: {
     bundler: "metro",
     output: "single",
+    favicon: "./assets/favicon.png",
   },
   plugins: [
     "expo-router",
@@ -71,8 +75,10 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     [
       "expo-splash-screen",
       {
+        image: "./assets/splash-icon.png",
         backgroundColor: "#0B0B0F",
         resizeMode: "contain",
+        imageWidth: 200,
       },
     ],
     [
@@ -85,6 +91,19 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       },
     ],
     "expo-notifications",
+    [
+      // Release APKs block cleartext HTTP by default. Testing builds often point
+      // at a local backend over http://<LAN-IP>:3001, so allow cleartext when the
+      // build profile opts in (development/preview). Production leaves it off and
+      // must use HTTPS.
+      "expo-build-properties",
+      {
+        android: {
+          usesCleartextTraffic:
+            process.env.EXPO_PUBLIC_ALLOW_CLEARTEXT === "true",
+        },
+      },
+    ],
   ],
   experiments: {
     typedRoutes: true,
