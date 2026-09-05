@@ -5,25 +5,42 @@
 
 import type {
   ApplicationStage,
+  ApplicationTask,
   Job,
   JobListItem,
   JobOutcome,
   JobStatus,
   StageEvent,
+  StageEventMetadata,
+  StageTransitionTarget,
 } from "job-ops-shared/types/jobs";
 import type { JobsListResponse } from "job-ops-shared/types/pipeline";
 
 export type {
   ApplicationStage,
+  ApplicationTask,
   Job,
   JobListItem,
   JobOutcome,
   JobStatus,
   JobsListResponse,
   StageEvent,
+  StageEventMetadata,
+  StageTransitionTarget,
 };
 
 export type { ApiResponse } from "job-ops-shared/types/api";
+export type {
+  DesignResumeDocument,
+  DesignResumePdfResponse,
+  DesignResumeStatusResponse,
+} from "job-ops-shared/types/design-resume";
+export type { ResumeProfile } from "job-ops-shared/types/settings";
+export type {
+  BranchInfo,
+  JobChatMessage,
+  JobChatStreamEvent,
+} from "job-ops-shared/types/chat";
 
 /**
  * Public user shape returned by the backend. The shared package intentionally

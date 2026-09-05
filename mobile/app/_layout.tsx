@@ -61,6 +61,7 @@ export default function RootLayout() {
                   <Stack.Screen name="(auth)" />
                   <Stack.Screen name="(tabs)" />
                   <Stack.Screen name="job/[id]" options={{ headerShown: true }} />
+                  <Stack.Screen name="chat/[jobId]" options={{ headerShown: true }} />
                 </Stack>
               </AuthGate>
             </AuthProvider>

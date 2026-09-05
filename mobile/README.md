@@ -14,10 +14,11 @@ This workspace was added under `mobile/` in the monorepo. It reuses the shared
 TypeScript contracts from `job-ops-shared` (`../shared`) so mobile and web share
 data models.
 
-> **Status:** Foundation phase — auth, API client, navigation + guards, Jobs
-> list/detail, and AI scoring are implemented. Applications tracking, Resume
-> Studio, push notifications, and document capture land in later phases (see
-> [Roadmap](#roadmap)).
+> **Status:** Implemented — auth, API client, navigation + guards, Jobs
+> list/detail + AI scoring, Applications stage timeline, Resume Studio (view,
+> per-job AI tailoring, PDF export/share), and Ghostwriter chat (live SSE
+> streaming, cancel, reset). Push notifications and document capture land in
+> later phases (see [Roadmap](#roadmap)).
 
 ---
 
@@ -223,11 +224,12 @@ credentials and is tracked as a follow-up.
 
 | Phase | Scope | State |
 | --- | --- | --- |
-| Foundation | workspace, API client, auth + guards, Jobs list/detail, scoring | ✅ this pass |
-| Applications | full stage timeline, status transitions (`/jobs/:id/stages`) | list view stub ✅ |
-| Resume | Design Resume view/edit, AI tailoring (SSE), PDF export/share | ⏳ |
+| Foundation | workspace, API client, auth + guards, Jobs list/detail, scoring | ✅ |
+| Applications | stage timeline, advance-stage & outcome transitions (`/jobs/:id/stages`, `/outcome`), delete entries | ✅ |
+| Resume | base resume view, per-job AI tailoring (`/summarize`), PDF generate + download/share (`expo-file-system`+`expo-sharing`) | ✅ |
 | Notifications | push-token registration + backend hook into Gmail routing | ⏳ |
 | Documents | camera/file capture → base64 upload endpoints | ⏳ |
+| Ghostwriter chat | per-job AI chat over POST-stream SSE (`/jobs/:id/chat`), live token streaming, cancel, reset | ✅ (default thread) |
 | Resilience/perf | offline states, SSE recovery, FlashList | ⏳ |
 
 ## Security notes

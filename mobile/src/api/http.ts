@@ -54,6 +54,12 @@ export function configureApiAuth(config: {
   onUnauthorized = config.onUnauthorized;
 }
 
+/** Current bearer header, for authenticated out-of-band transfers (PDF downloads). */
+export function currentAuthHeader(): string | null {
+  const token = getToken();
+  return token ? `Bearer ${token}` : null;
+}
+
 // --- Response envelope -----------------------------------------------------
 
 type LegacyResponse<T> =

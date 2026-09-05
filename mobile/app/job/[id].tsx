@@ -1,5 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
-import { Stack, useLocalSearchParams } from "expo-router";
+import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
 import {
   Linking,
@@ -13,6 +13,8 @@ import { ScoreBadge, StatusBadge } from "@/components/Badge";
 import { Button } from "@/components/Button";
 import { Screen } from "@/components/Screen";
 import { ErrorState, LoadingView } from "@/components/States";
+import { ApplicationSection } from "@/features/applications/ApplicationSection";
+import { JobResumeSection } from "@/features/resume/JobResumeSection";
 import { formatSalary, statusLabel } from "@/features/jobs/format";
 import {
   useApplyToJob,
@@ -25,6 +27,7 @@ import { fontSize, radius, spacing, useTheme } from "@/theme/theme";
 
 export default function JobDetailScreen() {
   const { colors } = useTheme();
+  const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
   const query = useJob(id);
   const rescore = useRescoreJob();
@@ -111,6 +114,14 @@ export default function JobDetailScreen() {
             </Text>
           </View>
 
+          {/* Per-job AI resume tailoring + PDF */}
+          <JobResumeSection job={job} />
+
+          {/* Application tracking — shown once the job is an application */}
+          {job.status === "applied" || job.status === "in_progress" ? (
+            <ApplicationSection job={job} />
+          ) : null}
+
           {/* Description */}
           {job.jobDescription ? (
             <View
@@ -136,6 +147,10 @@ export default function JobDetailScreen() {
 
           {/* Actions */}
           <View style={styles.actions}>
+            <Button
+              title="Ask Ghostwriter"
+              onPress={() => router.push(`/chat/${job.id}`)}
+            />
             {applyUrl ? (
               <Button
                 title="Open posting"
