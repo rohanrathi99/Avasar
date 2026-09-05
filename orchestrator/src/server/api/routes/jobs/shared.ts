@@ -79,6 +79,7 @@ export function toJobListItem(
     jobFunction: job.jobFunction,
     pdfRegenerating: job.pdfRegenerating,
     pdfFreshness: job.pdfFreshness,
+    wishlistedAt: job.wishlistedAt,
     salaryMinAmount: job.salaryMinAmount,
     salaryMaxAmount: job.salaryMaxAmount,
     salaryCurrency: job.salaryCurrency,

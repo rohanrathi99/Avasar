@@ -58,6 +58,7 @@ export const queryKeys = {
       [...queryKeys.jobs.all, "documents", id] as const,
     emails: (id: string, limit: number) =>
       [...queryKeys.jobs.all, "emails", id, { limit }] as const,
+    wishlist: () => [...queryKeys.jobs.all, "wishlist"] as const,
   },
   pipeline: {
     all: ["pipeline"] as const,

@@ -197,6 +197,9 @@ export function transitionStage(
 
     if (toStage !== "no_change" && !isNoteEvent) {
       updates.status = STAGE_TO_STATUS[finalToStage];
+      // Every post-application stage means the user applied, so the job
+      // leaves the wishlist automatically.
+      updates.wishlistedAt = null;
 
       if (finalToStage === "applied" && !job.appliedAt) {
         updates.appliedAt = new Date().toISOString();

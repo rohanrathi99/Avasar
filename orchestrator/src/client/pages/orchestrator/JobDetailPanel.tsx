@@ -44,6 +44,8 @@ import {
   ExternalLink,
   FileText,
   FolderKanban,
+  Heart,
+  HeartOff,
   Link2,
   Loader2,
   MoreHorizontal,
@@ -296,6 +298,7 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
   const [isEditDetailsOpen, setIsEditDetailsOpen] = useState(false);
   const [catalog, setCatalog] = useState<ResumeProjectCatalogItem[]>([]);
   const [isUploadingPdf, setIsUploadingPdf] = useState(false);
+  const [isTogglingWishlist, setIsTogglingWishlist] = useState(false);
   const [openedListingJobIds, setOpenedListingJobIds] = useState<Set<string>>(
     () => new Set(),
   );
@@ -389,6 +392,25 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
   const openEditDetails = useCallback(() => {
     window.setTimeout(() => setIsEditDetailsOpen(true), 0);
   }, []);
+
+  const handleToggleWishlist = useCallback(async () => {
+    if (!selectedJob) return;
+    setIsTogglingWishlist(true);
+    try {
+      if (selectedJob.wishlistedAt) {
+        await api.removeJobFromWishlist(selectedJob.id);
+        toast.success("Removed from wishlist");
+      } else {
+        await api.addJobToWishlist(selectedJob.id);
+        toast.success("Added to wishlist");
+      }
+      await onJobUpdated();
+    } catch (error) {
+      showErrorToast(error, "Failed to update wishlist");
+    } finally {
+      setIsTogglingWishlist(false);
+    }
+  }, [onJobUpdated, selectedJob]);
 
   const handleCopyInfo = useCallback(async () => {
     if (!selectedJob) return;
@@ -760,6 +782,21 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                 <DropdownMenuItem onSelect={() => void handleCopyInfo()}>
                   <Copy className="mr-2 h-4 w-4" />
                   Copy job info
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onSelect={() => void handleToggleWishlist()}
+                  disabled={isTogglingWishlist}
+                >
+                  {isTogglingWishlist ? (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  ) : selectedJob.wishlistedAt ? (
+                    <HeartOff className="mr-2 h-4 w-4" />
+                  ) : (
+                    <Heart className="mr-2 h-4 w-4" />
+                  )}
+                  {selectedJob.wishlistedAt
+                    ? "Remove from Wishlist"
+                    : "Add to Wishlist"}
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onSelect={() => rescoreJob(selectedJob.id)}

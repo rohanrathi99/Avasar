@@ -156,7 +156,7 @@ export const ReactiveResumeConfigPanel: React.FC<
     rxresume:
       "RxResume export uses the upstream print/export endpoint for the final PDF.",
     latex:
-      "LaTeX renders PDFs locally with Jake's template and requires tectonic on the JobOps host.",
+      "LaTeX renders PDFs locally with Jake's template and requires tectonic on the Avasar host.",
     typst: "Typst renders PDFs locally and supports selectable resume themes.",
   };
 

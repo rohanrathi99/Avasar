@@ -248,6 +248,7 @@ export const jobs = sqliteTable(
     tracerLinksEnabled: integer("tracer_links_enabled", { mode: "boolean" })
       .notNull()
       .default(false),
+    wishlistedAt: text("wishlisted_at"),
     sponsorMatchScore: real("sponsor_match_score"),
     sponsorMatchNames: text("sponsor_match_names"),
 

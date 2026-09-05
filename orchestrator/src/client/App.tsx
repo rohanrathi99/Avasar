@@ -33,6 +33,7 @@ import { TracerLinksPage } from "./pages/TracerLinksPage";
 import { TrackingInboxPage } from "./pages/TrackingInboxPage";
 import { VisaSponsorsPage } from "./pages/VisaSponsorsPage";
 import { WatchlistPage } from "./pages/WatchlistPage";
+import { WishlistJobsPage } from "./pages/WishlistJobsPage";
 
 /** Backwards-compatibility redirects: old URL paths -> new URL paths */
 const REDIRECTS: Array<{ from: string; to: string }> = [
@@ -114,7 +115,7 @@ export const App: React.FC = () => {
               {!demoWaitlistBannerDismissed && (
                 <>
                   {" "}
-                  This is a read-only demo. Want JobOps without the Docker
+                  This is a read-only demo. Want Avasar without the Docker
                   setup?{" "}
                   <a
                     className="font-semibold underline underline-offset-2 hover:text-amber-50"
@@ -197,6 +198,7 @@ export const App: React.FC = () => {
                 <Route path="/visa-sponsors" element={<VisaSponsorsPage />} />
                 <Route path="/tracking-inbox" element={<TrackingInboxPage />} />
                 <Route path="/watchlist" element={<WatchlistPage />} />
+                <Route path="/wishlist" element={<WishlistJobsPage />} />
                 <Route path="/jobs/:tab" element={<OrchestratorPage />} />
                 <Route
                   path="/jobs/:tab/:jobId"

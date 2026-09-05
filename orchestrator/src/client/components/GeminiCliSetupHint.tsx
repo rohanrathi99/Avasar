@@ -25,8 +25,8 @@ export const GeminiCliSetupHint: React.FC = () => {
         , then run <code className="rounded bg-muted px-1 py-0.5">gemini</code>{" "}
         in a terminal and complete Google sign-in (OAuth), or set{" "}
         <code className="rounded bg-muted px-1 py-0.5">GEMINI_API_KEY</code> for
-        the CLI. JobOps spawns the CLI in headless mode and reuses those
-        credentials — no JobOps API key field.
+        the CLI. Avasar spawns the CLI in headless mode and reuses those
+        credentials — no Avasar API key field.
       </p>
       <p className="mt-2">
         <a

@@ -110,8 +110,8 @@ export const OrchestratorHeader: React.FC<OrchestratorHeaderProps> = ({
       icon={() => (
         <img src="/favicon.png" alt="" className="size-8 rounded-lg" />
       )}
-      title="Job Ops"
-      subtitle="Orchestrator"
+      title="Avasar"
+      subtitle="Moxie Master"
       navOpen={navOpen}
       onNavOpenChange={onNavOpenChange}
       statusIndicator={

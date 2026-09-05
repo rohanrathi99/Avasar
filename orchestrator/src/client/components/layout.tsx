@@ -129,7 +129,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
             </SheetTrigger>
             <SheetContent side="left" className="w-64 flex flex-col">
               <SheetHeader>
-                <SheetTitle>JobOps</SheetTitle>
+                <SheetTitle>Avasar</SheetTitle>
               </SheetHeader>
               <nav className="mt-6 flex flex-col gap-2">
                 {NAV_LINKS.map(({ to, label, icon: NavIcon, activePaths }) => (

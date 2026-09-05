@@ -132,6 +132,7 @@ export function toJobListItem(job: WatchlistJobResult): JobListItem {
     jobFunction: null,
     pdfRegenerating: false,
     pdfFreshness: "missing",
+    wishlistedAt: null,
     salaryMinAmount: null,
     salaryMaxAmount: null,
     salaryCurrency: null,

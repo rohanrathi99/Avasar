@@ -96,7 +96,7 @@ export function useDesignResumeStudio() {
   const pictureEnabled = Boolean(tracerReadiness?.isPubliclyAvailable);
   const pictureDisabledReason =
     tracerReadiness?.reason ??
-    "Pictures require JobOps to be reachable at a public URL.";
+    "Pictures require Avasar to be reachable at a public URL.";
   const activeSection = sectionParam ?? null;
   const activeSectionIsValid =
     activeSection == null ||
