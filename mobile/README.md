@@ -17,9 +17,10 @@ data models.
 > **Status:** Implemented — auth, API client, navigation + guards, Jobs
 > list/detail + AI scoring, Applications stage timeline, Resume Studio (view,
 > per-job AI tailoring, PDF export/share), Ghostwriter chat (live SSE
-> streaming, cancel, reset), and push notifications (client + minimal backend,
-> Gmail-router hook). Document capture lands in a later phase (see
-> [Roadmap](#roadmap)).
+> streaming, cancel, reset), push notifications (client + minimal backend,
+> Gmail-router hook), and document capture (camera / file → upload, open, delete).
+> All roadmap phases are implemented (see [Roadmap](#roadmap) for deferred
+> sub-features).
 
 ---
 
@@ -242,6 +243,17 @@ Implemented end-to-end (client + a minimal backend addition):
 No FCM/APNs secrets are bundled in the app — the client holds only its own Expo
 push token and the user JWT.
 
+## Documents
+
+Each job has a Documents section ([DocumentsSection](src/features/documents/DocumentsSection.tsx))
+for attaching résumés, cover letters, offer letters, or scans. Capture comes
+from the camera, the photo library, or the system file picker
+([capture.ts](src/features/documents/capture.ts)); files are size-checked
+(≤10 MB) and base64-encoded on device, then uploaded to the existing
+`POST /api/jobs/:id/documents` endpoint. Documents can be opened/shared (via the
+authenticated `…/content` route and the native share sheet) or deleted. No
+document generation happens on-device — the server remains responsible for that.
+
 ## Roadmap
 
 | Phase | Scope | State |
@@ -250,7 +262,7 @@ push token and the user JWT.
 | Applications | stage timeline, advance-stage & outcome transitions (`/jobs/:id/stages`, `/outcome`), delete entries | ✅ |
 | Resume | base resume view, per-job AI tailoring (`/summarize`), PDF generate + download/share (`expo-file-system`+`expo-sharing`) | ✅ |
 | Notifications | client push registration + deep-link + **minimal backend** (token table, `/api/notifications/*`, Gmail-router dispatch) | ✅ |
-| Documents | camera/file capture → base64 upload endpoints | ⏳ |
+| Documents | camera / photo / file capture → base64 upload, list, open/share, delete (`/jobs/:id/documents`) | ✅ |
 | Ghostwriter chat | per-job AI chat over POST-stream SSE (`/jobs/:id/chat`), live token streaming, cancel, reset | ✅ (default thread) |
 | Resilience/perf | offline states, SSE recovery, FlashList | ⏳ |
 

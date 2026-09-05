@@ -14,6 +14,7 @@ import { Button } from "@/components/Button";
 import { Screen } from "@/components/Screen";
 import { ErrorState, LoadingView } from "@/components/States";
 import { ApplicationSection } from "@/features/applications/ApplicationSection";
+import { DocumentsSection } from "@/features/documents/DocumentsSection";
 import { JobResumeSection } from "@/features/resume/JobResumeSection";
 import { formatSalary, statusLabel } from "@/features/jobs/format";
 import {
@@ -121,6 +122,9 @@ export default function JobDetailScreen() {
           {job.status === "applied" || job.status === "in_progress" ? (
             <ApplicationSection job={job} />
           ) : null}
+
+          {/* Document attachments (capture / upload) */}
+          <DocumentsSection jobId={job.id} />
 
           {/* Description */}
           {job.jobDescription ? (

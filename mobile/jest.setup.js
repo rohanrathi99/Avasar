@@ -18,3 +18,17 @@ jest.mock("expo-constants", () => ({
   __esModule: true,
   default: { expoConfig: { version: "0.1.0", extra: { apiUrl: "http://test.local:3001" } } },
 }));
+
+// Native file/share modules are stubbed so pure helpers that import them load.
+jest.mock("expo-file-system", () => ({
+  cacheDirectory: "file:///cache/",
+  EncodingType: { Base64: "base64" },
+  downloadAsync: jest.fn(async () => ({ status: 200, uri: "file:///cache/f" })),
+  getInfoAsync: jest.fn(async () => ({ exists: true, size: 10 })),
+  readAsStringAsync: jest.fn(async () => ""),
+}));
+
+jest.mock("expo-sharing", () => ({
+  isAvailableAsync: jest.fn(async () => true),
+  shareAsync: jest.fn(async () => {}),
+}));
