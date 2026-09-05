@@ -727,6 +727,29 @@ export const authSessions = sqliteTable(
   }),
 );
 
+export const pushTokens = sqliteTable(
+  "push_tokens",
+  {
+    id: text("id").primaryKey(),
+    tenantId: text("tenant_id")
+      .notNull()
+      .default("tenant_default")
+      .references(() => tenants.id, { onDelete: "cascade" }),
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    token: text("token").notNull(),
+    platform: text("platform"),
+    disabledAt: integer("disabled_at", { mode: "number" }),
+    createdAt: text("created_at").notNull().default(sql`(datetime('now'))`),
+    updatedAt: text("updated_at").notNull().default(sql`(datetime('now'))`),
+  },
+  (table) => ({
+    userIdIndex: index("idx_push_tokens_user_id").on(table.userId),
+    tokenUnique: uniqueIndex("idx_push_tokens_token_unique").on(table.token),
+  }),
+);
+
 export const designResumeDocuments = sqliteTable("design_resume_documents", {
   id: text("id").primaryKey(),
   tenantId: text("tenant_id")

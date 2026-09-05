@@ -16,9 +16,10 @@ data models.
 
 > **Status:** Implemented — auth, API client, navigation + guards, Jobs
 > list/detail + AI scoring, Applications stage timeline, Resume Studio (view,
-> per-job AI tailoring, PDF export/share), and Ghostwriter chat (live SSE
-> streaming, cancel, reset). Push notifications and document capture land in
-> later phases (see [Roadmap](#roadmap)).
+> per-job AI tailoring, PDF export/share), Ghostwriter chat (live SSE
+> streaming, cancel, reset), and push notifications (client + minimal backend,
+> Gmail-router hook). Document capture lands in a later phase (see
+> [Roadmap](#roadmap)).
 
 ---
 
@@ -212,13 +213,34 @@ eas build --profile production --platform ios        # → TestFlight / App Stor
 Validate production config with an actual build — a working `expo start` does not
 prove the store build is correct.
 
-## Push notifications (planned)
+## Push notifications
 
-The backend currently has **no** push infrastructure. The planned design:
-mobile registers its Expo push token with a new backend endpoint, and the Gmail
-email-routing flow (which already classifies interview/offer/rejection emails)
-emits a notification via FCM/APNs. This requires backend changes + FCM/APNs
-credentials and is tracked as a follow-up.
+Implemented end-to-end (client + a minimal backend addition):
+
+- **Client** — on sign-in, [NotificationsProvider](src/notifications/NotificationsProvider.tsx)
+  requests permission, resolves the Expo push token
+  ([registration.ts](src/notifications/registration.ts)), and registers it with
+  `POST /api/notifications/register`. Tapping a notification deep-links to the
+  relevant job (`data.jobId`), both while running and from a cold start. The
+  token is unregistered (`/unregister`) at logout, before the session is
+  cleared. Android uses a `default` channel; `POST_NOTIFICATIONS` is requested.
+- **Backend** (added under `orchestrator/`) — a `push_tokens` table
+  (tenant/user-scoped), `POST /api/notifications/{register,unregister}`, and a
+  best-effort dispatch hooked into the **existing Gmail email router**: when an
+  incoming email is auto-linked to a job and classified (interview / offer /
+  rejection / update), the job owner's devices are notified via the Expo push
+  service. Delivery failures never affect email ingestion; `DeviceNotRegistered`
+  tokens are auto-disabled.
+
+**Setup required for real delivery:**
+1. `eas init` (sets the EAS `projectId` — without it the client skips token
+   resolution and push stays disabled, so dev builds don't crash).
+2. Configure push credentials once via EAS: `eas credentials` — for Android add
+   the **FCM V1** service-account key; for iOS EAS manages the **APNs** key.
+   Expo's push service fans out to FCM/APNs; the backend only talks to Expo.
+
+No FCM/APNs secrets are bundled in the app — the client holds only its own Expo
+push token and the user JWT.
 
 ## Roadmap
 
@@ -227,7 +249,7 @@ credentials and is tracked as a follow-up.
 | Foundation | workspace, API client, auth + guards, Jobs list/detail, scoring | ✅ |
 | Applications | stage timeline, advance-stage & outcome transitions (`/jobs/:id/stages`, `/outcome`), delete entries | ✅ |
 | Resume | base resume view, per-job AI tailoring (`/summarize`), PDF generate + download/share (`expo-file-system`+`expo-sharing`) | ✅ |
-| Notifications | push-token registration + backend hook into Gmail routing | ⏳ |
+| Notifications | client push registration + deep-link + **minimal backend** (token table, `/api/notifications/*`, Gmail-router dispatch) | ✅ |
 | Documents | camera/file capture → base64 upload endpoints | ⏳ |
 | Ghostwriter chat | per-job AI chat over POST-stream SSE (`/jobs/:id/chat`), live token streaming, cancel, reset | ✅ (default thread) |
 | Resilience/perf | offline states, SSE recovery, FlashList | ⏳ |

@@ -15,6 +15,7 @@ import {
   startPostApplicationSyncRun,
 } from "@server/repositories/post-application-sync-runs";
 import { transitionStage } from "@server/services/applicationTracking";
+import { notifyApplicationUpdate } from "@server/services/notifications/push";
 import { resolveStageTransitionForTarget } from "@server/services/post-application/stage-target";
 import type { PostApplicationRouterStageTarget } from "@shared/types";
 import { classifyWithSmartRouter, minifyActiveJobs } from "./email-router";
@@ -394,6 +395,11 @@ export async function runGmailIngestionSync(args: {
             receivedAt: savedMessage.receivedAt,
             note: "Auto-created from Smart Router.",
           });
+          // Best-effort push to the job owner; never blocks/fails ingestion.
+          void notifyApplicationUpdate({
+            jobId: savedMessage.matchedJobId,
+            messageType: savedMessage.messageType,
+          }).catch(() => {});
         }
       } catch (error) {
         errored += 1;

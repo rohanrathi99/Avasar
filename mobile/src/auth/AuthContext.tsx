@@ -10,6 +10,7 @@ import {
 import * as authApi from "@/api/auth";
 import { configureApiAuth } from "@/api/http";
 import type { AuthUser } from "@/api/types";
+import { unregisterCurrentPushToken } from "@/notifications/registration";
 import { queryClient } from "@/query/queryClient";
 import { clearToken, loadToken, saveToken } from "./secureStore";
 import { isTokenExpired } from "./token";
@@ -139,6 +140,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   );
 
   const signOut = useCallback(async () => {
+    // Drop the device push token while the session can still authenticate.
+    await unregisterCurrentPushToken();
     try {
       await authApi.logout();
     } catch {

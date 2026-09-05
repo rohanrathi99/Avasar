@@ -13,6 +13,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { AuthProvider, useAuth } from "@/auth/AuthContext";
 import { LoadingView } from "@/components/States";
+import { NotificationsProvider } from "@/notifications/NotificationsProvider";
 import { queryClient } from "@/query/queryClient";
 
 SplashScreen.preventAutoHideAsync().catch(() => {
@@ -56,6 +57,7 @@ export default function RootLayout() {
           <ThemeProvider value={scheme === "dark" ? DarkTheme : DefaultTheme}>
             <AuthProvider>
               <StatusBar style={scheme === "dark" ? "light" : "dark"} />
+              <NotificationsProvider />
               <AuthGate>
                 <Stack screenOptions={{ headerShown: false }}>
                   <Stack.Screen name="(auth)" />

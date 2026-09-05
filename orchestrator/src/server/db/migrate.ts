@@ -419,6 +419,25 @@ const migrations = [
 
   `CREATE INDEX IF NOT EXISTS idx_auth_sessions_revoked_at
     ON auth_sessions(revoked_at)`,
+
+  `CREATE TABLE IF NOT EXISTS push_tokens (
+    id TEXT PRIMARY KEY,
+    tenant_id TEXT NOT NULL DEFAULT 'tenant_default',
+    user_id TEXT NOT NULL,
+    token TEXT NOT NULL,
+    platform TEXT,
+    disabled_at INTEGER,
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    updated_at TEXT NOT NULL DEFAULT (datetime('now')),
+    FOREIGN KEY (tenant_id) REFERENCES tenants(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+  )`,
+
+  `CREATE INDEX IF NOT EXISTS idx_push_tokens_user_id
+    ON push_tokens(user_id)`,
+
+  `CREATE UNIQUE INDEX IF NOT EXISTS idx_push_tokens_token_unique
+    ON push_tokens(token)`,
   `CREATE INDEX IF NOT EXISTS idx_hosted_usage_counters_tenant_user_period
     ON hosted_usage_counters(tenant_id, user_id, period)`,
   `CREATE UNIQUE INDEX IF NOT EXISTS idx_hosted_usage_counters_tenant_user_period_action_unique
