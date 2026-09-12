@@ -57,7 +57,6 @@ function renderRightSidebar(overrides: Parameters<typeof createJob>[0] = {}) {
       onStartTailoring={noop}
       onMarkApplied={noop}
       onToggleWishlist={noop}
-      onMoveToInProgress={noop}
       onOpenLogEvent={noop}
       onEditTailoring={noop}
       onViewPdf={noop}

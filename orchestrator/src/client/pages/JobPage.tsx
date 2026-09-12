@@ -392,17 +392,6 @@ export const JobPage: React.FC = () => {
     });
   };
 
-  const handleMoveToInProgress = async () => {
-    await runAction("move-in-progress", async () => {
-      if (!job) return;
-      await updateJobMutation.mutateAsync({
-        id: job.id,
-        update: { status: "in_progress" },
-      });
-      toast.success("Moved to in progress");
-    });
-  };
-
   const handleSkip = async () => {
     await runAction("skip", async () => {
       if (!job) return;
@@ -509,7 +498,8 @@ export const JobPage: React.FC = () => {
     : null;
   const isClosedStage = currentStage === "closed";
   const isInProgress = job?.status === "in_progress";
-  const canLogEvents = isInProgress && !isClosedStage;
+  const isApplied = job?.status === "applied";
+  const canLogEvents = (isInProgress || isApplied) && !isClosedStage;
   const jobLink = job ? job.applicationLink || job.jobUrl : null;
   const isBusy = activeAction !== null;
   const isRegeneratingPdf = isPdfRegenerating(job);
@@ -521,7 +511,6 @@ export const JobPage: React.FC = () => {
   const pdfActionsDisabled = !job?.pdfPath || isRegeneratingPdf;
   const isDiscovered = job?.status === "discovered";
   const isReady = job?.status === "ready";
-  const isApplied = job?.status === "applied";
   const baseJobPath = id ? `/job/${id}` : "";
   const latestNote = notes[0] ?? null;
   const latestEvent = events.at(-1) ?? null;
@@ -849,12 +838,13 @@ export const JobPage: React.FC = () => {
                   </div>
                 </div>
                 <div className="p-4">
-                  {!isInProgress && (
+                  {!isInProgress && !isApplied && (
                     <div className="mb-4 rounded-md border border-dashed border-border/60 p-3 text-sm text-muted-foreground">
-                      Move this job to In Progress to track application stages.
+                      Mark this job as applied to start tracking application
+                      stages.
                     </div>
                   )}
-                  {isInProgress && isClosedStage && (
+                  {(isInProgress || isApplied) && isClosedStage && (
                     <div className="mb-4 rounded-md border border-dashed border-border/60 p-3 text-sm text-muted-foreground">
                       This application is closed. Stage logging is disabled.
                     </div>
@@ -862,8 +852,8 @@ export const JobPage: React.FC = () => {
                   <JobTimeline
                     events={events}
                     discoveredAt={job.discoveredAt}
-                    onEdit={isInProgress ? handleEditEvent : undefined}
-                    onDelete={isInProgress ? confirmDeleteEvent : undefined}
+                    onEdit={canLogEvents ? handleEditEvent : undefined}
+                    onDelete={canLogEvents ? confirmDeleteEvent : undefined}
                   />
                 </div>
               </section>
@@ -909,7 +899,6 @@ export const JobPage: React.FC = () => {
               onStartTailoring={() => navigate(`/jobs/discovered/${job.id}`)}
               onMarkApplied={() => void handleMarkApplied()}
               onToggleWishlist={() => void handleToggleWishlist()}
-              onMoveToInProgress={() => void handleMoveToInProgress()}
               onOpenLogEvent={() => setIsLogModalOpen(true)}
               onEditTailoring={() => navigate(`/jobs/ready/${job.id}`)}
               onViewPdf={() => {

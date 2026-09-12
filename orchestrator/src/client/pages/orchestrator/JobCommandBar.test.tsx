@@ -227,7 +227,7 @@ describe("JobCommandBar", () => {
     );
     fireEvent.click(await screen.findByText("Platform Engineer"));
 
-    expect(onSelectJob).toHaveBeenCalledWith("applied", "applied-job");
+    expect(onSelectJob).toHaveBeenCalledWith("all", "applied-job");
   });
 
   it("returns only locked status results", async () => {
