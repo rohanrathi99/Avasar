@@ -1,0 +1,51 @@
+name: Deploy to ProU26
+
+# Manually deploys this repo to ProU26 (avasar.slotify.dev) via the self-hosted
+# runner installed on that server. The host is tailnet-only; see DEPLOYMENT.md
+# for the full hosting picture (Nginx -> systemd `avasar` -> Node 22 -> SQLite).
+#
+# workflow_dispatch only — never on push/pull_request, because the runner is a
+# real, always-on server and this repo is public.
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-avasar-prou26
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy to ProU26
+    # Guard: never run this job from a fork of the repo.
+    if: github.repository == 'rohanrathi99/Avasar'
+    # The ProU26 runner must carry the custom `prou26` label so this job never
+    # lands on another self-hosted runner registered to this repo (e.g. the
+    # avasar-rr server, which also has the default self-hosted/Linux/X64 labels).
+    # Add it in: repo Settings > Actions > Runners > ProU26 > Labels > `prou26`.
+    runs-on: [self-hosted, prou26]
+    timeout-minutes: 30
+    steps:
+      - name: Check out the triggering commit
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Use the server's Node 22 (nvm)
+        # Same binary the avasar systemd service runs, so native modules
+        # (better-sqlite3) compile for exactly the right ABI.
+        run: echo "/home/moxie/.nvm/versions/node/v22.22.1/bin" >> "$GITHUB_PATH"
+
+      - name: Install dependencies
+        run: npm ci --workspaces --include-workspace-root
+
+      - name: Build client
+        run: npm run build:client
+        working-directory: orchestrator
+
+      - name: Deploy and restart service
+        # Root-owned script, allowed via /etc/sudoers.d/avasar-deploy.
+        # Rsyncs this built checkout into /var/www/Avasar (data/ and the
+        # server-local .env are left untouched), runs db:migrate, restarts the
+        # avasar service, and fails the job if /health doesn't come back.
+        run: sudo -n /usr/local/bin/avasar-deploy "$GITHUB_WORKSPACE"
