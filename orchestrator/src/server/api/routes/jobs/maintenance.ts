@@ -1,6 +1,5 @@
-import { badRequest, forbidden, toAppError } from "@infra/errors";
+import { badRequest, toAppError } from "@infra/errors";
 import { fail, ok } from "@infra/http";
-import { isSystemAdmin } from "@infra/request-context";
 import { isDemoMode, sendDemoBlocked } from "@server/config/demo";
 import * as jobsRepo from "@server/repositories/jobs";
 import type { JobStatus } from "@shared/types";
@@ -8,12 +7,6 @@ import { type Request, type Response, Router } from "express";
 import { z } from "zod";
 
 export const jobsMaintenanceRouter = Router();
-
-function requireSystemAdmin(res: Response): boolean {
-  if (isSystemAdmin()) return true;
-  fail(res, forbidden("System admin access is required"));
-  return false;
-}
 
 const jobStatusParamSchema = z.enum([
   "discovered",
@@ -39,8 +32,6 @@ jobsMaintenanceRouter.delete(
           },
         );
       }
-
-      if (!requireSystemAdmin(res)) return;
 
       const parseResult = jobStatusParamSchema.safeParse(req.params.status);
       if (!parseResult.success) {
@@ -75,10 +66,8 @@ jobsMaintenanceRouter.delete(
         );
       }
 
-      if (!requireSystemAdmin(res)) return;
-
-      const threshold = parseInt(req.params.threshold, 10);
-      if (Number.isNaN(threshold) || threshold < 0 || threshold > 100) {
+      const threshold = Number(req.params.threshold);
+      if (!Number.isInteger(threshold) || threshold < 0 || threshold > 100) {
         return fail(
           res,
           badRequest("Threshold must be a number between 0 and 100"),

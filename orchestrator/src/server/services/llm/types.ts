@@ -1,4 +1,5 @@
 export type LlmProvider =
+  | "atlascloud"
   | "openrouter"
   | "orcarouter"
   | "requesty"
@@ -80,6 +81,8 @@ export type LlmServiceOptions = {
   provider?: string | null;
   baseUrl?: string | null;
   apiKey?: string | null;
+  allowEnvironmentCredentials?: boolean;
+  allowCliProviders?: boolean;
 };
 
 export type ProviderStrategy = {

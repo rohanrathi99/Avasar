@@ -334,41 +334,6 @@ describe.sequential("Settings API routes", () => {
     );
   });
 
-  it("rejects settings updates for non-admin users", async () => {
-    await stopServer({ server, closeDb, tempDir });
-    ({ server, baseUrl, closeDb, tempDir } = await startServer({
-      env: AUTH_ENV,
-    }));
-
-    const adminToken = await login(baseUrl, "admin", "secret");
-    const createUserRes = await fetch(`${baseUrl}/api/workspaces/users`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${adminToken}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        username: "regular",
-        password: "regular-secret",
-      }),
-    });
-    expect(createUserRes.status).toBe(201);
-
-    const regularToken = await login(baseUrl, "regular", "regular-secret");
-    const res = await fetch(`${baseUrl}/api/settings`, {
-      method: "PATCH",
-      headers: {
-        Authorization: `Bearer ${regularToken}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ llmApiKey: "attacker-controlled-value" }),
-    });
-    const body = await res.json();
-
-    expect(res.status).toBe(403);
-    expect(body.error.code).toBe("FORBIDDEN");
-  });
-
   it("ignores malformed stored purpose API keys when listing models", async () => {
     const { setSetting } = await import("@server/repositories/settings");
     await setSetting("llmPurposeApiKeys", JSON.stringify({ tailoring: 123 }));
@@ -560,6 +525,66 @@ describe.sequential("Settings API routes", () => {
     expect(getBody.data.missingSalaryPenalty.value).toBe(20);
   });
 
+  it("allows non-admin users to update search settings without widening access", async () => {
+    await stopServer({ server, closeDb, tempDir });
+    ({ server, baseUrl, closeDb, tempDir } = await startServer({
+      env: AUTH_ENV,
+    }));
+
+    const adminToken = await login(baseUrl, "admin", "secret");
+    const createUserRes = await fetch(`${baseUrl}/api/workspaces/users`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${adminToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        username: "regular",
+        password: "regular-secret",
+      }),
+    });
+    expect(createUserRes.status).toBe(201);
+
+    const regularToken = await login(baseUrl, "regular", "regular-secret");
+    const searchSettingsRes = await fetch(`${baseUrl}/api/settings`, {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${regularToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        searchTerms: ["backend engineer"],
+        workplaceTypes: ["remote"],
+        jobspyCountryIndeed: "united kingdom",
+        searchCities: "London",
+      }),
+    });
+    const searchSettingsBody = await searchSettingsRes.json();
+
+    expect(searchSettingsRes.status).toBe(200);
+    expect(searchSettingsBody.ok).toBe(true);
+    expect(searchSettingsBody.data.searchTerms.value).toEqual([
+      "backend engineer",
+    ]);
+    expect(searchSettingsBody.data.searchCities.value).toBe("London");
+
+    const protectedSettingsRes = await fetch(`${baseUrl}/api/settings`, {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${regularToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        searchTerms: ["backend engineer"],
+        llmApiKey: "attacker-controlled-value",
+      }),
+    });
+    const protectedSettingsBody = await protectedSettingsRes.json();
+
+    expect(protectedSettingsRes.status).toBe(403);
+    expect(protectedSettingsBody.error.code).toBe("FORBIDDEN");
+  });
+
   it("preserves upstream 404 from Reactive Resume project lookup", async () => {
     const { RxResumeRequestError } = await import("@server/services/rxresume");
     vi.mocked(getResume).mockRejectedValue(
@@ -624,5 +649,81 @@ describe.sequential("Settings API routes", () => {
       },
     ]);
     expect(extractProjectsFromResume).toHaveBeenCalled();
+  });
+
+  it("keeps platform credentials private and rejects LLM edits for hosted Free", async () => {
+    await stopServer({ server, closeDb, tempDir });
+    ({ server, baseUrl, closeDb, tempDir } = await startServer({
+      env: {
+        JOBOPS_APP_MODE: "hosted",
+        JOBOPS_HOSTED_TENANT_ID: "tenant_default",
+        JOBOPS_HOSTED_PLATFORM_LLM_ENABLED: "true",
+        LLM_PROVIDER: "openai",
+        LLM_API_KEY: "sk-platform-secret",
+        STRIPE_PRO_PRICE_ID: "price_pro",
+      },
+    }));
+
+    const settingsRes = await fetch(`${baseUrl}/api/settings`);
+    const settingsBody = await settingsRes.json();
+    expect(settingsBody.ok).toBe(true);
+    expect(settingsBody.data.llmApiKeyHint).toBeNull();
+
+    const updateRes = await fetch(`${baseUrl}/api/settings`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ llmProvider: "codex" }),
+    });
+    expect(updateRes.status).toBe(403);
+    await expect(updateRes.json()).resolves.toMatchObject({
+      ok: false,
+      error: { code: "FORBIDDEN" },
+    });
+  });
+
+  it("rejects LLM setting changes for hosted Pro", async () => {
+    await stopServer({ server, closeDb, tempDir });
+    ({ server, baseUrl, closeDb, tempDir } = await startServer({
+      env: {
+        JOBOPS_APP_MODE: "hosted",
+        JOBOPS_HOSTED_TENANT_ID: "tenant_default",
+        JOBOPS_HOSTED_PLATFORM_LLM_ENABLED: "true",
+        STRIPE_PRO_PRICE_ID: "price_pro",
+      },
+    }));
+    const { db, schema } = await import("@server/db");
+    await db.insert(schema.users).values({
+      id: "test-user",
+      username: "test-user",
+      displayName: "Test User",
+      passwordHash: "hash",
+      passwordSalt: "salt",
+    });
+    await db.insert(schema.tenantMemberships).values({
+      id: "membership-test-user",
+      tenantId: "tenant_default",
+      userId: "test-user",
+      role: "member",
+    });
+    await db.insert(schema.accountSubscriptions).values({
+      tenantId: "tenant_default",
+      userId: "test-user",
+      stripeCustomerId: "cus_test_user",
+      stripeSubscriptionId: "sub_test_user",
+      stripeSubscriptionCreatedAt: 100,
+      stripePriceId: "price_pro",
+      stripeStatus: "active",
+    });
+
+    const response = await fetch(`${baseUrl}/api/settings`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ model: "client-selected-model" }),
+    });
+    expect(response.status).toBe(403);
+    await expect(response.json()).resolves.toMatchObject({
+      ok: false,
+      error: { code: "FORBIDDEN" },
+    });
   });
 });
