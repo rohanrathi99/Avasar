@@ -397,14 +397,40 @@ export async function runPipeline(
         });
 
         const retryConfig = { ...mergedConfig, sources: challengedSources };
-        const retryResult = await discoverJobsStep({
-          mergedConfig: retryConfig,
-          includeWatchlist: false,
-          preserveFanout: true,
-          fanoutSeedJobs: discoveredJobs,
-          shouldCancel: () =>
-            getPipelineState(scopeKey).cancelRequestedAt !== null,
-        });
+        let retryResult: Awaited<ReturnType<typeof discoverJobsStep>>;
+        try {
+          retryResult = await discoverJobsStep({
+            mergedConfig: retryConfig,
+            includeWatchlist: false,
+            preserveFanout: true,
+            fanoutSeedJobs: discoveredJobs,
+            shouldCancel: () =>
+              getPipelineState(scopeKey).cancelRequestedAt !== null,
+          });
+        } catch (error) {
+          // The retry only covers the challenged sources, so a failure here
+          // (e.g. a timeout after the solve) must not discard jobs that the
+          // other sources already discovered before the pause.
+          if (discoveredJobs.length === 0) {
+            throw error;
+          }
+
+          const message =
+            error instanceof Error ? error.message : String(error);
+          pipelineLogger.warn(
+            "Challenge retry failed, continuing with jobs discovered before the pause",
+            {
+              retrySources: challengedSources,
+              error: message,
+              jobsKept: discoveredJobs.length,
+            },
+          );
+          retryResult = {
+            discoveredJobs: [],
+            sourceErrors: [`Retry after challenge failed: ${message}`],
+            pendingChallenges: [],
+          };
+        }
 
         discoveredJobs = [...discoveredJobs, ...retryResult.discoveredJobs];
         sourceErrors = [...sourceErrors, ...retryResult.sourceErrors];

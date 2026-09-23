@@ -113,4 +113,60 @@ describe.sequential("pipeline challenge handling", () => {
       }),
     );
   });
+
+  it("keeps jobs found before the pause when the post-solve retry fails", async () => {
+    const pipeline = await import("./orchestrator");
+    const pipelineRepo = await import("../repositories/pipeline");
+    const steps = await import("./steps");
+
+    const earlierJob = {
+      source: "linkedin",
+      title: "Platform Engineer",
+      employer: "Acme",
+      jobUrl: "https://example.com/jobs/1",
+    };
+    vi.mocked(steps.discoverJobsStep)
+      .mockResolvedValueOnce({
+        discoveredJobs: [earlierJob],
+        sourceErrors: [],
+        pendingChallenges: [challenge],
+      } as never)
+      .mockRejectedValueOnce(
+        new Error(
+          "All sources failed: Gradcracker: Request timeout (30000 ms) exceeded. (sources: gradcracker)",
+        ),
+      );
+
+    const runPromise = pipeline.runPipeline({
+      sources: ["gradcracker", "linkedin"],
+      locationIntent: {
+        selectedCountry: "united kingdom",
+        country: "united kingdom",
+        cityLocations: [],
+        workplaceTypes: [],
+        geoScope: "selected_only",
+        searchScope: "selected_only",
+        matchStrictness: "flexible",
+      },
+    });
+
+    await vi.waitFor(() => {
+      expect(pipeline.getPendingChallenges()).toHaveLength(1);
+    });
+    pipeline.resolvePipelineChallenge("gradcracker");
+
+    const result = await runPromise;
+
+    expect(result).toEqual(
+      expect.objectContaining({ success: true, jobsDiscovered: 1 }),
+    );
+    expect(vi.mocked(steps.discoverJobsStep)).toHaveBeenCalledTimes(2);
+    expect(vi.mocked(steps.importJobsStep)).toHaveBeenCalledWith({
+      discoveredJobs: [earlierJob],
+    });
+    expect(vi.mocked(pipelineRepo.updatePipelineRun)).not.toHaveBeenCalledWith(
+      "run-challenge-1",
+      expect.objectContaining({ status: "failed" }),
+    );
+  });
 });
